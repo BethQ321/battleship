@@ -1,4 +1,6 @@
-import { Ship, Gameboard, Player } from "./script";
+import Ship from './src/ship.js';
+import Gameboard from './src/gameboard.js';
+import Player from './src/player.js';
 
 // Creates a new ship for each test
 let ship;

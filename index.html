@@ -5,13 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Battleship</title>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="ui.js" defer></script>
-    <script src="script.js" defer></script>
+    <script src="./src/script.js" type="module" defer></script>
 </head>
 <body>
     <h1>Battleship</h1>
 
     <div id="boardContainer">
+        <div class="sides">
+            <h3>Action</h3>
+            <div id="action"></div>
+        </div>
+
+        <div class="sides">
+            <h3>Your board</h3>
+            <div id="humanBoard" class="board"></div>
+        </div>
+
+        <div class="sides">
+            <h3>Computer board</h3>
+            <div id="opponentBoard" class="board"></div>
+        </div>
     </div>
 </body>
 </html>

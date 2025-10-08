@@ -1,19 +1,3 @@
-class Ship {
-    constructor(length, name) {
-        this.length = length;
-        this.name = name;
-        this.timesHit = 0;
-    }
-
-    hit() {
-        this.timesHit++;
-    }
-
-    isSunk() {
-        return this.timesHit >= this.length;
-    }
-}
-
 class Gameboard {
     constructor() {
         this.length = 10;
@@ -50,7 +34,7 @@ class Gameboard {
         // check collisions
         if(orientation === 'h') {
             for(let i = 0; i < ship.length; i++) {
-                if(this.board[x + i][y] !== 0) {
+                if(this.board[y][x + i] !== 0) {
                     return false;
                 };
             };
@@ -58,7 +42,7 @@ class Gameboard {
 
         if(orientation === 'v') {
             for(let i = 0; i < ship.length; i++) {
-                if(this.board[x][y + i] !== 0) {
+                if(this.board[y + i][x] !== 0) {
                     return false;
                 };
             };
@@ -67,13 +51,13 @@ class Gameboard {
         // place ship
         if(orientation === 'h') {
             for(let i = 0; i < ship.length; i++) {
-                this.board[x + i][y] = { ship: ship, isHit: false};
+                this.board[y][x + i] = { ship: ship, isHit: false};
             };
         };
 
         if(orientation === 'v') {
             for(let i = 0; i < ship.length; i++) {
-                this.board[x][y + i] = { ship: ship, isHit: false};
+                this.board[y + i][x] = { ship: ship, isHit: false};
             };
         };
 
@@ -83,27 +67,24 @@ class Gameboard {
     receiveAttack (coordinate) {
         let message = '';
         const [x, y] = coordinate;
-        const attackLocation = this.board[x][y];
+        const attackLocation = this.board[y][x];
 
         if(attackLocation === 1 || (typeof attackLocation === 'object' && attackLocation.isHit)) {
-            message = 'already attacked';
+            message = 'Already attacked';
         } else if(attackLocation === 0) {
-            this.board[x][y] = 1;
-            message = 'miss';
+            this.board[y][x] = 1;
+            message = 'Miss';
         } else {
             attackLocation.isHit = true;
             attackLocation.ship.hit();
             this.totalHits++;
 
             if(attackLocation.ship.isSunk()) {
-                message = `You sunk my ${attackLocation.ship.name}`;
+                message = `Hit. You sunk my ${attackLocation.ship.name}!`;
             } else {
-                message = 'hit';
+                message = 'Hit!';
             }
         }
-        if(this.endGame()) {
-            message += ' and won the game!';
-        };
         return message;
     }
 
@@ -113,33 +94,4 @@ class Gameboard {
 
 }
 
-class Player {
-    constructor(playerType) {
-        this.playerType = playerType;
-        this.playerBoard = new Gameboard; 
-        this.attackList = [];     
-    }
-
-    attack(coordinate, opponentBoard) {
-        const [x, y] = coordinate;
-        if(this.attackList.includes(`${x},${y}`)) {
-            return 'already attacked';
-        } else {
-            this.attackList.push(`${x},${y}`);
-        }
-
-        return opponentBoard.receiveAttack(coordinate);
-    }
-
-    generateMove() {
-        let coordinate;
-        do {
-            const x = Math.floor(Math.random() * 10);
-            const y = Math.floor(Math.random() * 10);      
-            coordinate = [x, y];
-        } while (this.attackList.includes(`${coordinate[0]},${coordinate[1]}`));
-        return coordinate;
-    }
-}
-
-export { Ship, Gameboard, Player }
+export default Gameboard;
